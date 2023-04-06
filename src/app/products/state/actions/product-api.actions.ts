@@ -2,7 +2,7 @@ import { createActionGroup, props } from '@ngrx/store';
 import { Product } from '../../product';
 
 export const ProductApiActions = createActionGroup({
-  source: 'Products Page',
+  source: 'Products API',
   events: {
     'Load Products Successful': props<{ products: Product[] }>(),
     'Load Products Failure': props<{ error: string }>(),
