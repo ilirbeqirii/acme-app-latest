@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { Product } from '../product';
 import { ProductEditComponent } from '../product-edit/product-edit.component';
 import { ProductListComponent } from '../product-list/product-list.component';
+import { Store } from '@ngrx/store';
+import { ProductPageActions } from '../state/actions/product-page.actions';
+import { productsFeature } from '../state/product.reducer';
 
 @Component({
   selector: 'pm-product-shell',
@@ -18,46 +21,63 @@ export class ProductShellComponent {
   displayCode$!: Observable<boolean>;
   errorMessage$!: Observable<string>;
 
-  // store = inject(Store<State>);
+  store = inject(Store);
 
   ngOnInit(): void {
-    // this.store.dispatch(ProductPageAction.loadProducts());
-    // this.products$ = this.store.select(getProducts);
-    // this.selectedProduct$ = this.store.select(getCurrentProduct);
-    // this.displayCode$ = this.store.select(getShowProductCode);
-    // this.errorMessage$ = this.store.select(getError);
+    this.store.dispatch(ProductPageActions.loadProducts());
+
+    this.products$ = this.store.select(productsFeature.selectProducts);
+    this.selectedProduct$ = this.store.select(
+      productsFeature.selectCurrentProduct
+    ) as Observable<Product>;
+    this.displayCode$ = this.store.select(
+      productsFeature.selectShowProductCode
+    );
+    this.errorMessage$ = this.store.select(productsFeature.selectError);
+
     // this.store.select(getShowProductCode)
     //   .subscribe((showProductCode: boolean) => this.displayCode = showProductCode);
+
     // this.store.select(getCurrentProduct).subscribe(
     //   currentProduct => this.selectedProduct = currentProduct
     // );
   }
 
   checkChanged(): void {
-    // this.store.dispatch(ProductPageAction.toggleProductCode());
+    this.store.dispatch(ProductPageActions.toggleProductCode());
   }
 
   newProduct(): void {
-    // this.store.dispatch(ProductPageAction.initializeCurrentProduct());
+    this.store.dispatch(ProductPageActions.initializeCurrentProduct());
   }
 
   productSelected(product: Product): void {
-    // this.store.dispatch(ProductPageAction.setCurrentProduct({ currentProductId: product.id }));
+    if (product.id) {
+      this.store.dispatch(
+        ProductPageActions.setCurrentProduct({
+          currentProductId: product.id,
+        })
+      );
+    }
   }
 
   deleteProduct(product: Product): void {
-    // this.store.dispatch(ProductPageAction.deleteProduct({ productId: product.id }));
+    if (product.id) {
+      this.store.dispatch(
+        ProductPageActions.deleteProduct({ productId: product.id })
+      );
+    }
   }
 
   clearProduct(): void {
-    // this.store.dispatch(ProductPageAction.cleanCurrentProdut());
+    this.store.dispatch(ProductPageActions.cleanCurrentProduct());
   }
 
   createProduct(product: Product): void {
-    // this.store.dispatch(ProductPageAction.addProduct({ product }));
+    this.store.dispatch(ProductPageActions.createProduct({ product }));
   }
 
   updateProduct(product: Product): void {
-    // this.store.dispatch(ProductPageAction.updateProduct({ product }));
+    this.store.dispatch(ProductPageActions.updateProduct({ product }));
   }
 }
