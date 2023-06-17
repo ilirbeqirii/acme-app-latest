@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   Output,
+  booleanAttribute,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../product';
@@ -22,7 +23,7 @@ export class ProductListComponent {
   @Input()
   errorMessage: string | undefined;
 
-  @Input()
+  @Input({ transform: booleanAttribute })
   displayCode: boolean = false;
 
   @Input()

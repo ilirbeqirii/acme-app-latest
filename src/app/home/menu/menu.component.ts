@@ -20,8 +20,8 @@ export class MenuComponent {
   }
 
   get userName(): string {
-    if (this.authService.currentUser) {
-      return this.authService.currentUser.userName;
+    if (this.authService.currentUser()) {
+      return this.authService.currentUser()!.userName;
     }
     return '';
   }

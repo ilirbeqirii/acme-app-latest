@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, Signal, WritableSignal, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from '../product';
 import { ProductEditComponent } from '../product-edit/product-edit.component';
@@ -16,24 +16,21 @@ import { productsFeature } from '../state/product.reducer';
   styleUrls: ['./product-shell.component.css'],
 })
 export class ProductShellComponent {
-  products$!: Observable<Product[]>;
-  selectedProduct$!: Observable<Product>;
-  displayCode$!: Observable<boolean>;
-  errorMessage$!: Observable<string>;
 
   store = inject(Store);
 
+  products: Signal<Product[]> = this.store.selectSignal(productsFeature.selectProducts);
+  selectedProduct: Signal<Product> = this.store.selectSignal(
+    productsFeature.selectCurrentProduct
+  ) as Signal<Product>;
+  displayCode: Signal<boolean> = this.store.selectSignal(
+    productsFeature.selectShowProductCode
+  );
+  errorMessage: Signal<string> = this.store.selectSignal(productsFeature.selectError);
+
+
   ngOnInit(): void {
     this.store.dispatch(ProductPageActions.loadProducts());
-
-    this.products$ = this.store.select(productsFeature.selectProducts);
-    this.selectedProduct$ = this.store.select(
-      productsFeature.selectCurrentProduct
-    ) as Observable<Product>;
-    this.displayCode$ = this.store.select(
-      productsFeature.selectShowProductCode
-    );
-    this.errorMessage$ = this.store.select(productsFeature.selectError);
 
     // this.store.select(getShowProductCode)
     //   .subscribe((showProductCode: boolean) => this.displayCode = showProductCode);

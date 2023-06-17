@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, Signal, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -21,13 +21,11 @@ export class LoginComponent implements OnInit {
   router = inject(Router);
   store = inject(Store);
 
-  maskUserName$!: Observable<boolean>;
+  maskUserName: Signal<boolean> = this.store.selectSignal(usersFeature.selectMaskUserName);
 
   constructor() {}
 
-  ngOnInit(): void {
-    this.maskUserName$ = this.store.select(usersFeature.selectMaskUserName);
-  }
+  ngOnInit(): void {}
 
   cancel(): void {
     this.router.navigate(['welcome']);
@@ -44,7 +42,7 @@ export class LoginComponent implements OnInit {
       this.authService.login(userName, password);
 
       if (this.authService.redirectUrl) {
-        this.router.navigateByUrl(this.authService.redirectUrl);
+        this.router.navigateByUrl(this.authService.redirectUrl());
       } else {
         this.router.navigate(['/products']);
       }

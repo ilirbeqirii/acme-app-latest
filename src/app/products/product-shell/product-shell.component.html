@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-md-4">
     <pm-product-list
-      [errorMessage]="errorMessage$ | async"
-      [displayCode]="displayCode$ | async"
-      [products]="products$ | async"
-      [selectedProduct]="selectedProduct$ | async"
+      [errorMessage]="errorMessage()"
+      [displayCode]="displayCode()"
+      [products]="products()"
+      [selectedProduct]="selectedProduct()"
       (displayCodeChanged)="checkChanged()"
       (initializeNewProduct)="newProduct()"
       (productWasSelected)="productSelected($any($event))"
@@ -13,8 +13,8 @@
   </div>
   <div class="col-md-8">
     <pm-product-edit
-      [errorMessage]="errorMessage$ | async"
-      [selectedProduct]="selectedProduct$ | async"
+      [errorMessage]="errorMessage()"
+      [selectedProduct]="selectedProduct()"
       (clearCurrent)="clearProduct()"
       (create)="createProduct($event)"
       (update)="updateProduct($event)"

@@ -7,6 +7,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  signal,
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -28,9 +29,22 @@ import { Product } from '../product';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductEditComponent implements OnInit, OnChanges {
-  pageTitle = 'Product Edit';
-  productForm!: FormGroup;
+  pageTitle = signal('Product Edit');
   fb = inject(FormBuilder);
+
+  productForm: FormGroup = this.fb.group({
+    productName: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+      ],
+    ],
+    productCode: ['', Validators.required],
+    starRating: ['', NumberValidators.range(1, 5)],
+    description: '',
+  });
 
   // Use with the generic validation message class
   displayMessage: { [key: string]: string } = {};
@@ -82,19 +96,6 @@ export class ProductEditComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     // Define the form group
-    this.productForm = this.fb.group({
-      productName: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(50),
-        ],
-      ],
-      productCode: ['', Validators.required],
-      starRating: ['', NumberValidators.range(1, 5)],
-      description: '',
-    });
 
     // Watch for value changes for validation
     this.productForm.valueChanges.subscribe(
@@ -128,9 +129,9 @@ export class ProductEditComponent implements OnInit, OnChanges {
 
       // Display the appropriate page title
       if (product.id === 0) {
-        this.pageTitle = 'Add Product';
+        this.pageTitle.set('Add Product');
       } else {
-        this.pageTitle = `Edit Product: ${product.productName}`;
+        this.pageTitle.set('`Edit Product: ${product.productName}`');
       }
 
       // Update the data on the form

@@ -15,7 +15,7 @@ function checkLoggedIn(url: string): boolean {
   }
 
   // Retain the attempted URL for redirection
-  authService.redirectUrl = url;
+  authService.redirectUrl.set(url);
   router.navigate(['/login']);
   return false;
 }
