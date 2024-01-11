@@ -44,6 +44,7 @@ bootstrapApplication(AppComponent, {
       name: 'APM Demo App Devtools',
       maxAge: 25,
       logOnly: !isDevMode(),
+      connectInZone: true,
     }),
     provideEffects(),
     provideState(usersFeature), // NgRx v15: register the feature, this uses the feature name defined in createFeature
